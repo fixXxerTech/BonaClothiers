@@ -4,6 +4,8 @@ from django.conf import settings
 # from django.utils import timezone
 from django.contrib import messages
 from django.core.mail import EmailMessage
+from .tokens import account_activation_token
+from django.contrib.auth import update_session_auth_hash
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import get_template, render_to_string

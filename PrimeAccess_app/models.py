@@ -9,8 +9,25 @@ Authenticated_manager = get_user_model()
 
 # To get the model from the other app
 # ------------------------------------
-# product_model = apps.get_model("C_app", "InventoryModel")
+# outfit_model = apps.get_model("C_app", "InventoryModel")
 
+
+
+def InventoryPhotoRename(instance, filename):
+    ext = filename.split('.')[-1]
+    if instance.pk:
+        return '{folder}/{date}/{name}.{extension}'.format(folder='Outfits', date=timezone.now(), name=instance.pk, extension=ext)
+    else:
+        pass
+
+
+
+def ColorPhotoRename(instance, filename):
+    ext = filename.split('.')[-1]
+    if instance.pk:
+        return '{folder}/{date}/{name}.{extension}'.format(folder='Outfits', date=timezone.now(), name=instance.pk, extension=ext)
+    else:
+        pass
 
 class InventoryModel(models.Model):
     active_manager = models.ForeignKey(
@@ -21,17 +38,17 @@ class InventoryModel(models.Model):
         blank=True,
         null=True,
     )
-    product_name = models.CharField(
+    outfit_name = models.CharField(
         max_length=1000,
         blank=False,
         null=False,
     )
-    product_discription = models.CharField(
+    outfit_measurement_type = models.CharField(
         max_length=1500,
         blank=False,
         null=False,
     )
-    product_price = models.IntegerField(
+    outfit_price = models.IntegerField(
         default=0,
         null=False,
         blank=False,
@@ -48,15 +65,43 @@ class InventoryModel(models.Model):
     )
 
     def __str__(self):
-        return "{manager} added product: {name} on {date}".format(manager=self.active_manager.username, name=self.product_price, date=self.record_date)
+        return "{manager} added outfit: {name} on {date}".format(manager=self.active_manager.username, name=self.outfit_price, date=self.record_date)
+
+
+class OutfitColorsModel(models.Model):
+    active_manager = models.ForeignKey(
+        Authenticated_manager,
+        on_delete=models.CASCADE,
+        verbose_name="auth_manager",
+        related_name="manager_color_data",
+        blank=True,
+        null=True,
+    )
+    color_name = models.CharField(
+        max_length=1000,
+        blank=False,
+        null=False,
+    )
+    color_image = models.ImageField(
+        null=False,
+        blank=False,
+    )
+    record_date_edited = models.DateTimeField(
+        auto_now=True,
+    )
+    record_date = models.DateTimeField(
+        auto_now_add=True,
+    )
+    def __str__(self):
+        return "{manager} added outfit: {name} on {date}".format(manager=self.active_manager.username, name=self.color_name, date=self.record_date)
 
 
 class OrderModel(models.Model):
-    product_ordered = models.ForeignKey(
+    outfit_ordered = models.ForeignKey(
         InventoryModel,
         on_delete=models.CASCADE,
-        verbose_name="product_info",
-        related_name="ordered_product_data",
+        verbose_name="outfit_info",
+        related_name="ordered_outfit_data",
         blank=True,
         null=True,
     )
@@ -208,7 +253,7 @@ class OrderModel(models.Model):
     )
 
     def __str__(self):
-        return "{quantity}x {product} ordered on {date}".format(quantity=self.order_quantity, product=self.product_name, date=self.date_ordered)
+        return "{quantity}x {outfit} ordered on {date}".format(quantity=self.order_quantity, outfit=self.outfit_name, date=self.date_ordered)
 
 
 class DeliverySettings(models.Model):
@@ -255,13 +300,13 @@ class DeliverySettings(models.Model):
         return "{state} state delivery rate: {delivery_rate} by: {manager} added on {date}".format(state=self.state, delivery_rate=self.delivery_rate, manager=self.active_manager, date=self.record_date)
 
 
-class ProductImageModel(models.Model):
-    product_ordered = models.ForeignKey(
+class OutfitImageModel(models.Model):
+    outfit_ordered = models.ForeignKey(
         InventoryModel,
         on_delete=models.CASCADE,
-        verbose_name="product_info",
-        related_name="product_data",
+        verbose_name="outfit_info",
+        related_name="outfit_data",
         blank=True,
         null=True,
     )
-    product_image = models.ImageField()
+    outfit_image = models.ImageField()

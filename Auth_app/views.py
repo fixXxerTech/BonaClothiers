@@ -276,8 +276,8 @@ class RegisterView(custom_view):
 
                 # You can add some logic here to send email to the surveyor(s)
 
-                if EmailManager(request) == "email-sent":
-                    return render(request, self.email_sent_template, context=context)
+                # if EmailManager(request) == "email-sent":
+                    # return render(request, self.email_sent_template, context=context)
                 return redirect(reverse("LoginView", args={"signup-success"}))
         except Exception as Error:
             raise Error

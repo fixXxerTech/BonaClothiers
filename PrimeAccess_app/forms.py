@@ -58,6 +58,19 @@ NIGERIAN_STATES = (
     ("Zamfara", "Zamfara"),
     ("Outside Nigeria", "Outside Nigeria"),
 )
+
+
+# A drop down list of all Outfit Measure Type States
+# ---------------------------------------------------
+OUTFIT_MEASUREMENT_TYPES = (
+
+    # ("", "state"),
+    ("Long Sleeve", "Long Sleeve"),
+    ("3/4 Sleeve", "3/4 Sleeve"),
+    ("Short Sleev", "Short Sleeve"),
+    ("Trouser", "Trouser"),
+    ("Short", "Short"),
+)
 # <select name="state" id="state">
 #               <option value="" selected="selected">- Select -</option>
 #               <option value="Abuja FCT">Abuja FCT</option>
@@ -103,7 +116,7 @@ NIGERIAN_STATES = (
 def InventoryPhotoRename(instance, filename):
     ext = filename.split('.')[-1]
     if instance.pk:
-        return '{folder}/{date}/{name}.{extension}'.format(folder='Products', date=timezone.now(), name=instance.pk, extension=ext)
+        return '{folder}/{date}/{name}.{extension}'.format(folder='Outfits', date=timezone.now(), name=instance.pk, extension=ext)
     else:
         pass
         # do something if pk is not there yet
@@ -111,8 +124,8 @@ def InventoryPhotoRename(instance, filename):
 
 class InventoryForm(forms.ModelForm):
 
-    product_image = forms.ImageField(
-        label='Product Image',
+    style_image = forms.ImageField(
+        label='Style Image',
         # widget=forms.TextInput(
         #     attrs={
 
@@ -125,6 +138,22 @@ class InventoryForm(forms.ModelForm):
         # )
     )
 
+    outfit_measurement_type = forms.ChoiceField(
+        label='Outfit Type',
+        choices=OUTFIT_MEASUREMENT_TYPES,
+        widget=forms.Select(
+            attrs={
+
+                'name': 'outfit_measurement_type',
+                'aria-label': 'outfit_measurement_type',
+                'id': 'OutfitMeasurementType',
+                'class': 'form-select',
+                # 'data-dropdown-css-class': 'woox--select-squared-dropdown-dark',
+                # 'data-minimum-results-for-search': 'Infinity',
+
+            }
+        )
+    )
     # username = forms.CharField(
     #     label='User Name',
     #     widget=forms.TextInput(
@@ -183,10 +212,10 @@ class InventoryForm(forms.ModelForm):
     class Meta:
         model = models.InventoryModel
         fields = (
-            'product_name',
-            'product_price',
-            'product_image',
-            'product_discription',
+            'outfit_name',
+            'style_image',
+            'outfit_price',
+            'outfit_measurement_type',
         )
 
         exclude = (
@@ -197,11 +226,11 @@ class InventoryForm(forms.ModelForm):
 
     def save(self, commit=True):
         InventoryModelInstance = super(InventoryForm, self).save(commit=False)
-        InventoryModelInstance.order_status = self.cleaned_data['order_status']
-        InventoryModelInstance.order_remark = self.cleaned_data['order_remark']
-        InventoryModelInstance.order_quantity = self.cleaned_data['order_quantity']
-        InventoryModelInstance.active_manager = self.cleaned_data['active_manager']
-        InventoryModelInstance.customer_address = self.cleaned_data['customer_address']
+        InventoryModelInstance.outfit_name = self.cleaned_data['outfit_name']
+        InventoryModelInstance.style_image = self.cleaned_data['style_image']
+        InventoryModelInstance.outfit_price = self.cleaned_data['outfit_price']
+        InventoryModelInstance.outfit_measurement_type = self.cleaned_data['outfit_measurement_type']
+        # InventoryModelInstance.active_manager = self.cleaned_data['active_manager']
 
         if commit:
             InventoryModelInstance.save()
@@ -274,8 +303,8 @@ class OrderForm(forms.ModelForm):
             attrs={
 
                 'type': 'select',
-                'id': 'outfit-name',
-                'name': 'outfit-name',
+                'id': 'OutfitName',
+                'name': 'outfit_name',
                 'placeholder': '',
                 'class': 'form-control',
 
@@ -288,4 +317,43 @@ class OrderForm(forms.ModelForm):
         exclude = (
             'deliver_date',
             'date_ordered',
+            'outfit_ordered',
         )
+
+
+class ColorForm(forms.ModelForm):
+    class Meta:
+        model = models.OutfitColorsModel
+        exclude = (
+            'deliver_date',
+            'date_ordered',
+            'active_manager',
+        )
+
+
+
+# class ColorForm(forms.ModelForm):
+#     # color_name = forms.ModelChoiceField(
+#     #     queryset=models.InventoryModel.objects.all(),
+#     #     label='Outfit Name',
+#     #     empty_label="----------",
+#     #     widget=forms.Select(
+#     #         attrs={
+
+#     #             'type': 'select',
+#     #             'id': 'outfit-name',
+#     #             'name': 'outfit-name',
+#     #             'placeholder': '',
+#     #             'class': 'form-control',
+
+#     #         }
+#     #     )
+#     # )
+
+#     class Meta:
+#         model = models.OutfitColorsModel
+#         exclude = (
+#             'deliver_date',
+#             'date_ordered',
+#             'active_manager',
+#         )

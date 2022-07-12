@@ -2,20 +2,20 @@
 {% load static %}
 
 {% block title %}
-    <title>Orders - {{ panel_name }}</title>
+    <title>Outfit Inventory - {{ panel_name }}</title>
 {% endblock title %}
 
 {% block content %}
-   <!-- ======= main ( Orders ) ======= -->
+   <!-- ======= main ( Outfits ) ======= -->
 
    <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Order History</h1>
+      <h1>Outfits Inventory</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'PrimeAccessView' %}">Home</a></li>
-          <li class="breadcrumb-item active">Order History</li>
+          <li class="breadcrumb-item active">Outfits Inventory</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -311,97 +311,56 @@
                   </div>
 
                   <div class="card-body">
-                    <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                    <h5 class="card-title">All Outfits <!-- <span>| Today</span> --></h5>
 
                     <table class="table table-borderless datatable">
                       <thead>
                         <tr>
                           <th scope="col">#</th>
-                          <th scope="col">Customer</th>
-                          <th scope="col">Product</th>
+                          <th scope="col">Style Image</th>
+                          <th scope="col">Outfit Name</th>
+                          <th scope="col">Outfit Type</th>
                           <th scope="col">Price</th>
-                          <th scope="col">Quantity</th>
-                          <th scope="col">Total Amount</th>
-                          <th scope="col">Status</th>
-                          <th scope="col"></th>
+                          <th scope="col">Date Added</th>
+                          <th scope="col">Last Edited</th>
+                          <th scope="col">Edit</th>
+                          <th scope="col">Delete</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <th scope="row"><a href="#">#2457</a></th>
-                          <td>Brandon Jacob</td>
-                          <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                          <td>$64</td>
-                          <td>3</td>
-                          <td>$64*3</td>
-                          <td><span class="badge bg-success">Approved</span></td>
-                          <td>
-                            <a class="btn btn-outline-primary w-100" href="#">
-                              <i class="bi bi-pencil-square"></i>
-                              Edit
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
+                        {% for outfit in outfit_inventory %}
+                          <tr>
+                            <th scope="row"><a href="#">#{{ outfit.pk }}</a></th>
+                            <td>{{ outfit.style_image.url }}</td>
+                            <td>{{ outfit.outfit_name }}</td>
+                            <!-- <td><a href="#" class="text-primary">At praesentium minu</a></td> -->
+                            <td>{{ outfit.outfit_measurement_type }}</td>
+                            <!-- <td><span class="badge bg-success">Approved</span></td> -->
+                            <td>{{ outfit.outfit_price }}</td>
+                            <td>{{ outfit.record_date }}</td>
+                            <td>{{ outfit.record_date_edited }}</td>
+                            <td>{{ outfit.outfit_measurement_type }}</td>
+                            <td>
+                              <a class="btn btn-outline-primary w-100" href="{% url 'DeliverySettingsModificationView' action='update' instance=record.pk %}">
+                                <i class="bi bi-pencil-square"></i>
+                                Edit
+                              </a>
+                            </td>
+                            <td>
+                              <a class="btn btn-outline-danger w-100" href="{% url 'DeliverySettingsModificationView' action='delete' instance=record.pk %}" onclick="return confirm('Are you sure you want to delete this record?')">
+                                <i class="bi bi-trash"></i>
+                                Delete
+                              </a>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        <!-- <tr>
                           <th scope="row"><a href="#">#2147</a></th>
                           <td>Bridie Kessler</td>
                           <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
                           <td>$47</td>
-                          <td>6</td>
-                          <td>$47*6</td>
                           <td><span class="badge bg-warning">Pending</span></td>
-                          <td>
-                            <a class="btn btn-outline-primary w-100" href="#">
-                              <i class="bi bi-pencil-square"></i>
-                              Edit
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row"><a href="#">#2049</a></th>
-                          <td>Ashleigh Langosh</td>
-                          <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                          <td>$147</td>
-                          <td>4</td>
-                          <td>$147*4</td>
-                          <td><span class="badge bg-success">Approved</span></td>
-                          <td>
-                            <a class="btn btn-outline-primary w-100" href="#">
-                              <i class="bi bi-pencil-square"></i>
-                              Edit
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row"><a href="#">#2644</a></th>
-                          <td>Angus Grady</td>
-                          <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                          <td>$67</td>
-                          <td>3</td>
-                          <td>$67*3</td>
-                          <td><span class="badge bg-danger">Rejected</span></td>
-                          <td>
-                            <a class="btn btn-outline-primary w-100" href="#">
-                              <i class="bi bi-pencil-square"></i>
-                              Edit
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row"><a href="#">#2644</a></th>
-                          <td>Raheem Lehner</td>
-                          <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                          <td>$165</td>
-                          <td>9</td>
-                          <td>$165*9</td>
-                          <td><span class="badge bg-success">Approved</span></td>
-                          <td>
-                            <a class="btn btn-outline-primary w-100" href="#">
-                              <i class="bi bi-pencil-square"></i>
-                              Edit
-                            </a>
-                          </td>
-                        </tr>
+                        </tr> -->
                       </tbody>
                     </table>
 
@@ -428,13 +387,13 @@
                   </div>
 
                   <div class="card-body pb-0">
-                    <h5 class="card-title">Top Selling <span>| Today</span></h5>
+                    <h5 class="card-title">Top Selling <!-- <span>| Today</span> --></h5>
 
                     <table class="table table-borderless datatable">
                       <thead>
                         <tr>
                           <th scope="col">Preview</th>
-                          <th scope="col">Product</th>
+                          <th scope="col">Outfit</th>
                           <th scope="col">Price</th>
                           <th scope="col">Sold</th>
                           <th scope="col">Revenue</th>
@@ -490,5 +449,5 @@
       <!-- </div> -->
     </section>
 
-  </main><!-- End #main ( Orders ) -->
+  </main><!-- End #main ( Outfits ) -->
 {% endblock content %}

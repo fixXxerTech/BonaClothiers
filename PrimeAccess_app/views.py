@@ -46,8 +46,99 @@ class PrimeAccessView(custom_view):
         return render(request, self.template_name, context=context)
 
 
+class AllColorsView(custom_view):
+    template_name = join_path("dashboard", "all-colors.html")
+
+    def get(self, request):
+        all_colors = reversed(models.OutfitColorsModel.objects.all())
+        form_class = forms.ColorForm()
+
+        context = {
+            "form": form_class,
+            "panel_name": panel_name,
+            "Todays_Date": Todays_Date,
+            "outfit_colors": all_colors,
+        }
+
+        return render(request, self.template_name, context=context)
+
+    def post(self, request):
+        all_colors = reversed(models.OutfitColorsModel.objects.all())
+        form_class = forms.ColorForm(request.POST, request.FILES)
+
+        context = {
+            "form": form_class,
+            "panel_name": panel_name,
+            "Todays_Date": Todays_Date,
+            "outfit_colors": all_colors,
+        }
+
+        if form_class.is_valid():
+            form_instance = form_class.save(commit=False)
+            form_instance.active_manager = request.user
+            form_instance.save()
+        else:
+            print(form_class.errors)
+
+        return render(request, self.template_name, context=context)
+
+
+class ModifyColorsView(custom_view):
+    action = "update"
+    template_name = join_path("dashboard", "all-colors.html")
+    edit_template_name = join_path("dashboard", "edit-colors.html")
+
+    def get(self, request, action, instance):
+
+        if action == "delete":
+            models.OutfitColorsModel.objects.get(pk=instance).delete()
+            return redirect(reverse("AllColorsView"))
+        elif action == "update":
+            all_colors = reversed(models.OutfitColorsModel.objects.all())
+            color_record = models.OutfitColorsModel.objects.get(
+                pk=instance)
+            form_class = forms.ColorForm(instance=color_record)
+
+            context = {
+                "form": form_class,
+                "action": self.action,
+                "panel_name": panel_name,
+                "Todays_Date": Todays_Date,
+                "outfit_colors": all_colors,
+            }
+            return render(request, self.edit_template_name, context=context)
+
+
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, action, instance):
+        if action == "update":
+            all_colors = reversed(models.OutfitColorsModel.objects.all())
+            color_record = models.OutfitColorsModel.objects.get(
+                pk=instance)
+            form_class = forms.ColorForm(
+                data=request.POST, instance=color_record)
+
+            context = {
+                "form": form_class,
+                "action": self.action,
+                "panel_name": panel_name,
+                "Todays_Date": Todays_Date,
+                "outfit_colors": all_colors,
+            }
+
+            if form_class.is_valid():
+                # form_instance = form_class.save(commit=False)
+                # form_class.active_manager = request.user
+                form_class.save()
+                return redirect(reverse("AllColorsView"))
+            # return render(request, self.edit_template_name, context=context)
+
+        return render(request, self.template_name, context=context)
+
+
 class AllProductsView(custom_view):
-    template_name = join_path("dashboard", "all-products.html")
+    template_name = join_path("dashboard", "all-outfits.html")
 
     def get(self, request, category):
         context = {
@@ -67,10 +158,13 @@ class AllProductsView(custom_view):
 
 
 class AddProductsView(custom_view):
-    template_name = join_path("dashboard", "add-products.html")
+    template_name = join_path("dashboard", "add-outfits.html")
 
     def get(self, request):
+        form_class = forms.InventoryForm()
+
         context = {
+            "form": form_class,
             "panel_name": panel_name,
             "Todays_Date": Todays_Date,
         }
@@ -78,10 +172,21 @@ class AddProductsView(custom_view):
         return render(request, self.template_name, context=context)
 
     def post(self, request):
+        form_class = forms.InventoryForm(request.POST, request.FILES)
+
+        # pprint(fm)
+
         context = {
+            "form": form_class,
             "panel_name": panel_name,
             "Todays_Date": Todays_Date,
         }
+
+        if form_class.is_valid():
+            form_instance = form_class.save(commit=False)
+            form_instance.active_manager = request.user
+            form_instance.save()
+            return redirect(reverse("AllProductsView"))
 
         return render(request, self.template_name, context=context)
 
@@ -158,10 +263,6 @@ class ModifyDeliverySettings(custom_view):
             all_delivery_record = models.DeliverySettings.objects.all()
             delivery_record = models.DeliverySettings.objects.get(
                 pk=instance)
-            # delivery_record_render = {
-            #     "state": delivery_record.values("state")[0]["state"],
-            #     "delivery_rate": delivery_record.values("delivery_rate")[0]["delivery_rate"],
-            # }
             form_class = forms.DeliverySettngsForm(instance=delivery_record)
 
             context = {
@@ -180,10 +281,6 @@ class ModifyDeliverySettings(custom_view):
             all_delivery_record = models.DeliverySettings.objects.all()
             delivery_record = models.DeliverySettings.objects.get(
                 pk=instance)
-            # delivery_record_render = {
-            #     "state": delivery_record.values("state")[0]["state"],
-            #     "delivery_rate": delivery_record.values("delivery_rate")[0]["delivery_rate"],
-            # }
             form_class = forms.DeliverySettngsForm(
                 data=request.POST, instance=delivery_record)
 
@@ -203,8 +300,3 @@ class ModifyDeliverySettings(custom_view):
                 return redirect(reverse("DeliverySettingsView"))
 
         return render(request, self.template_name, context=context)
-        # new_instance = instance_data.update(
-        #     state=request.POST["state"],
-        #     delivery_rate=request.POST["delivery-rate"]
-        # )
-        # new_instance.save()
