@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-6(z9%c2u-k@xxoq@q*x$=*-#(2p41-&+e=xf=t9yym^(%erv6w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['cb1a0754-b29b-4fef-a985-935aff18927d.id.repl.co']
 
 
 # Application definition
@@ -190,3 +190,6 @@ EMAIL_HOST_PASSWORD = "successwritteningold"
 # Password reset timeout settings
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
+
+# X Frame Settings for Replit deployment
+X_FRAME_OPTIONS = '*'
