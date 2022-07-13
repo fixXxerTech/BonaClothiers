@@ -1,5 +1,6 @@
 from django.db import models
 from django.apps import apps
+from datetime import date, datetime
 from django.contrib.auth import get_user_model
 
 
@@ -11,23 +12,37 @@ Authenticated_manager = get_user_model()
 # ------------------------------------
 # outfit_model = apps.get_model("C_app", "InventoryModel")
 
-
+# To get the current date and time to be used in the path
+# --------------------------------------------------------
+today = datetime.now()
+# Month abbreviation, day and year  
+todaysdate = today.strftime("%b-%dth-%Y-%H_hrs-%M_mins-%S_secs")
 
 def InventoryPhotoRename(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/Outfits/<date&time>/<new_file_name>
     ext = filename.split('.')[-1]
-    if instance.pk:
-        return '{folder}/{date}/{name}.{extension}'.format(folder='Outfits', date=timezone.now(), name=instance.pk, extension=ext)
-    else:
-        pass
-
-
+    name = filename.split('.')[0]
+    return '{folder}/{date}/{name}.{extension}'.format(folder='Outfits', date=todaysdate, name=f"{instance.outfit_name}_{instance.pk}", extension=ext)
 
 def ColorPhotoRename(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/Colors/<date&time>/<new_file_name>
     ext = filename.split('.')[-1]
-    if instance.pk:
-        return '{folder}/{date}/{name}.{extension}'.format(folder='Outfits', date=timezone.now(), name=instance.pk, extension=ext)
-    else:
-        pass
+    name = filename.split('.')[0]
+    return '{folder}/{date}/{name}.{extension}'.format(folder='Colors', date=todaysdate, name=instance.color_name, extension=ext)
+
+def StylePhotoRename(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/Styles/<date&time>/<new_file_name>
+    ext = filename.split('.')[-1]
+    name = filename.split('.')[0]
+    return '{folder}/{date}/{name}.{extension}'.format(folder='Styles', date=todaysdate, name=f"{instance.style_name}_{instance.pk}", extension=ext)
+  
+# def user_directory_path(instance, filename):
+#     # file will be uploaded to MEDIA_ROOT/user_<customid>/<filename>
+#     return 'user_{0}/{1}'.format(instance.user.userprofile.customid, filename)
+
+# def user_directory_path(instance, filename):
+#     # file will be uploaded to MEDIA_ROOT/user_<customid>/<filename>
+#     return 'user_{0}/{1}'.format(instance.user.userprofile.customid, filename)
 
 class InventoryModel(models.Model):
     active_manager = models.ForeignKey(
@@ -59,10 +74,6 @@ class InventoryModel(models.Model):
     record_date = models.DateTimeField(
         auto_now_add=True,
     )
-    style_image = models.ImageField(
-        null=False,
-        blank=False,
-    )
 
     def __str__(self):
         return "{manager} added outfit: {name} on {date}".format(manager=self.active_manager.username, name=self.outfit_price, date=self.record_date)
@@ -85,6 +96,7 @@ class OutfitColorsModel(models.Model):
     color_image = models.ImageField(
         null=False,
         blank=False,
+        upload_to=ColorPhotoRename,
     )
     record_date_edited = models.DateTimeField(
         auto_now=True,
@@ -93,7 +105,7 @@ class OutfitColorsModel(models.Model):
         auto_now_add=True,
     )
     def __str__(self):
-        return "{manager} added outfit: {name} on {date}".format(manager=self.active_manager.username, name=self.color_name, date=self.record_date)
+        return "{manager} added color: {name} on {date}".format(manager=self.active_manager.username, name=self.color_name, date=self.record_date)
 
 
 class OrderModel(models.Model):
@@ -310,3 +322,50 @@ class OutfitImageModel(models.Model):
         null=True,
     )
     outfit_image = models.ImageField()
+
+
+class TransporterModel(models.Model):
+    transporter_name = models.CharField(
+        max_length=1000,
+        blank=False,
+        null=False,
+    )
+    record_date_edited = models.DateTimeField(
+        null=True,
+        blank=True,
+        auto_now=True,
+    )
+    record_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        auto_now_add=True,
+    )
+
+    def __str__(self):
+        return "Transporter: {transport_name} added on {date}".format(transport_name=self.transporter_name, date=self.record_date)
+
+
+class StyleImageModel(models.Model):
+    style_name = models.CharField(
+        max_length=1000,
+        blank=False,
+        null=False,
+    )
+    style_image = models.ImageField(
+        null=False,
+        blank=False,
+        upload_to=StylePhotoRename,
+    )
+    record_date_edited = models.DateTimeField(
+        null=True,
+        blank=True,
+        auto_now=True,
+    )
+    record_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        auto_now_add=True,
+    )
+
+    def __str__(self):
+        return "Style name: {style_name} added on {date}".format(state=self.style_name, date=self.record_date)

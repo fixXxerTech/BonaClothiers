@@ -16,13 +16,24 @@ urlpatterns = [
          views.ModifyColorsView.as_view(),
          name="ModifyColorsView"),
 
-    path('all-products/<category>/',
+    path('all-styles/',
+         views.AllStylesView.as_view(),
+         name="AllStylesView"),
+    path('all-styles/<action>/<instance>/',
+         views.ModifyStylesView.as_view(),
+         name="ModifyStylesView"),
+
+    path('all-products/',
          views.AllProductsView.as_view(),
          name="AllProductsView"),
-    path('add-products/',
-         views.AddProductsView.as_view(),
-         name="AddProductsView"),
-    path('all-orders/<category>/',
+    path('all-products/<action>/<instance>/',
+         views.ModifyProductsView.as_view(),
+         name="ModifyProductsView"),
+
+    path('all-orders/',
+         views.AllOrdersView.as_view(),
+         name="AllOrdersView"),
+    path('all-orders/',
          views.AllOrdersView.as_view(),
          name="AllOrdersView"),
 
@@ -32,6 +43,10 @@ urlpatterns = [
     path('delivery-settings/<action>/<instance>/',
          views.ModifyDeliverySettings.as_view(),
          name="DeliverySettingsModificationView"),
+
+    path('add-transporter/',
+         views.AddTransporterView.as_view(),
+         name="AddTransporterView"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

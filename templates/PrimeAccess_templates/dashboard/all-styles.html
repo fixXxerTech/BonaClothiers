@@ -3,20 +3,20 @@
 {% load humanize %}
 
 {% block title %}
-    <title>Colors - {{ panel_name }}</title>
+    <title>Styles - {{ panel_name }}</title>
 {% endblock title %}
 
 {% block content %}
-   <!-- ======= main ( Orders ) ======= -->
+   <!-- ======= main ( Styles ) ======= -->
 
    <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Colors</h1>
+      <h1>Outfit Styles</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'PrimeAccessView' %}">Home</a></li>
-          <li class="breadcrumb-item active">Fabric Colors</li>
+          <li class="breadcrumb-item active">Outfit Styles</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -258,7 +258,7 @@
                           markers: {
                             size: 4
                           },
-                          colors: ['#4154f1', '#2eca6a', '#ff771d'],
+                          styles: ['#4154f1', '#2eca6a', '#ff771d'],
                           fill: {
                             type: "gradient",
                             gradient: {
@@ -297,20 +297,35 @@
               <!-- Recent Sales -->
               <div class="col-12">
 
-              {% if form.errors %}
-                {% for key, value in form.errors.items %}
-                  <div class="alert alert-danger alert-dismissible fade show w-100" role="alert">
-                    <!-- <i class="bi bi-exclamation-octagon"></i> -->
-                    <h4 class="alert-heading">
-                    <i class="bi bi-exclamation-octagon"></i>  Error</h4>
-                    <p class="text-capitalize">{{ key }}:</span> {{ value|striptags }}</p>
-                    <!-- <hr> -->
-                    <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                {% endfor %}
-              {% endif %}
-              
+                {% if form.errors %}
+                  {% for key, value in form.errors.items %}
+                    <div class="alert alert-danger alert-dismissible fade show w-100" role="alert">
+                      <!-- <i class="bi bi-exclamation-octagon"></i> -->
+                      <h4 class="alert-heading">
+                      <i class="bi bi-exclamation-octagon"></i>  Error</h4>
+                      <p class="text-capitalize">{{ key }}:</span> {{ value|striptags }}</p>
+                      <!-- <hr> -->
+                      <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+
+                {% if messages %}
+                  {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show w-100" role="alert">
+                      <!-- <i class="bi bi-exclamation-octagon"></i> -->
+                      <h4 class="alert-heading text-capitalize">
+                      <i class="bi bi-check2-circle"></i>  {{ message.tags }}</h4>
+                      <p class="text-capitalize"><span>{{ message }}</p>
+                      <!-- <p class="text-capitalize"><span>{{ key }}:</span> {{ value|striptags }}</p> -->
+                      <!-- <hr> -->
+                      <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+
                 <div class="card recent-sales overflow-auto">
 
                   <!-- <div class="filter">
@@ -327,53 +342,128 @@
                   </div> -->
                   <div class="filter">
 
+                    <!-- Basic Modal -->
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#basicModal" style="margin-right: 20px ;">
+                      <i class="bi bi-paint-bucket"></i>
+                      Add Style
+                    </button>
+
+                    <div class="modal fade" id="basicModal" tabindex="-1">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Add a Style</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+
+                            <!-- Floating Labels Form -->
+                          <form method="post" action="." class="row g-3 justify-content-center" enctype="multipart/form-data">
+                            {% csrf_token %}
+                  
+
+                            <div class="modal-body row g-3">
+
+                              <div class="col-md-6">
+                                <div class="form-floating">
+                                  <input type="text" class="form-control" id="StyleName" placeholder="Style name" name="style_name">
+                                  <label for="StyleName">Style Name</label>
+                                </div>
+                              </div>
+
+                              <!-- <div class="row mb-3">
+                                <label for="inputStyle" class="col-sm-2 col-form-label">Style Picker</label>
+                                <div class="col-sm-10 col-md-6">
+                                  <input type="style" class="form-control form-control-style" id="exampleStyleInput" value="#4154f1" title="Choose your style">
+                                </div>
+                              </div> -->
+
+                              <div class="col-md-6">
+                                <label for="StyleImage" class="text-center">
+                                  <img src="https://icons.iconarchive.com/icons/dtafalonso/android-lollipop/128/Downloads-icon.png" width="60px" height="60px" id="StyleImagePreview"/>
+                                  <span class="font-weight-bold">
+                                    <br>
+                                    Style Image
+                                  </span>
+                                </label>
+
+                                <input type="file" id="StyleImage" alt="Style Image" name="style_image"accept="image/jpeg, image/png, image/gif, image/jpg, image/svg image/*" style="display: none;" />
+                              </div>
+
+                            </div>
+
+                            <div class="modal-footer justify-content-center">
+                              <button type="submit" class="btn btn-outline-success">
+                                <i class="bi bi-folder-plus"></i>
+                                <!-- <i class="bi bi-paint-bucket"></i> -->
+                                Add Style
+                              </button>
+                              <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                                <i class="bi bi-x-octagon"></i>
+                                Close
+                              </button>
+                            </div>
+                          </form>
+
+                        </div>
+                      </div>
+                    </div><!-- End Basic Modal-->
+
                   </div>
 
                   <div class="card-body">
-                    <h5 class="card-title">Recent Colors <!-- <span>| Today</span> --></h5>
+                    <h5 class="card-title">Recent Styles <!-- <span>| Today</span> --></h5>
 
-                    <!-- Floating Labels Form -->
-                    <form method="post" action="." class="row g-3" enctype="multipart/form-data">
-                      {% csrf_token %}
-            
-
-                      <div class="modal-body row g-3">
-
-                        <div class="col-md-6">
-                          <div class="form-floating">
-                            <input type="text" class="form-control" id="ColorName" placeholder="Color name" name="color_name" value="{{ form.color_name.value }}">
-                            <label for="ColorName">Color Name</label>
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <label for="StyleImage" class="text-center">
-                            <!-- {{ form.color_image.label }} -->
-                            <img src="{{ form.color_image.value.url }}" width="60px" height="60px" id="StyleImagePreview"/>
-                            <span class="font-weight-bold">
-                              <br>
-                              Color Image
-                            </span>
-                          </label>
-
-                          <input type="file" id="StyleImage" alt="Color Image" name="color_image"accept="image/jpeg, image/png, image/gif, image/jpg, image/svg image/*" style="display: none;"/>
-                        </div>
-
-                      </div>
-
-                      <div class="modal-footer justify-content-center">
-                        <button type="submit" class="btn btn-outline-primary">
-                          <i class="bi bi-pencil-square"></i>
-                          Update Color
-                        </button>
-                        <a href="{% url 'AllColorsView' %}">
-                          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
-                            <i class="bi bi-x-octagon"></i>
-                            Cancel
-                          </button>
-                        </a>
-                      </div>
-                    </form>
+                    <table class="table table-borderless datatable">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Style Image</th>
+                          <th scope="col">Style Name</th>
+                          <th scope="col">Edit</th>
+                          <th scope="col">Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for style in outfit_styles %}
+                          <tr>
+                            <th scope="row"><a href="#">#{{ style.pk }}</a></th>
+                            <th scope="row">
+                              <a href="#">
+                                <img src="{{ style.style_image.url }}" alt="outfit style: {{ style.style_name }}" width="40px" class="img-thumbnail img-rounded">
+                              </a>
+                            </th>
+                            <td>{{ style.style_name }}</td>
+                            <td>
+                              <a class="btn btn-outline-primary w-100"href="{% url 'ModifyStylesView' action='update' instance=style.pk %}">
+                                <i class="bi bi-pencil-square"></i>
+                                Edit
+                              </a>
+                            </td>
+                            <td>
+                              <a class="btn btn-outline-danger w-100" href="{% url 'ModifyStylesView' action='delete' instance=style.pk %}" onclick="return confirm('Are you sure you want to delete this record?')">
+                                <i class="bi bi-trash"></i>
+                                Delete
+                              </a>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        <!-- <tr>
+                          <th scope="row"><a href="#">#2147</a></th>
+                          <td>Bridie Kessler</td>
+                          <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
+                          <td>$47</td>
+                          <td>6</td>
+                          <td>$47*6</td>
+                          <td><span class="badge bg-warning">Pending</span></td>
+                          <td>
+                            <a class="btn btn-outline-primary w-100" href="#">
+                              <i class="bi bi-pencil-square"></i>
+                              Edit
+                            </a>
+                          </td>
+                        </tr> -->
+                      </tbody>
+                    </table>
 
                   </div>
 
@@ -398,7 +488,7 @@
                   </div>
 
                   <div class="card-body pb-0">
-                    <h5 class="card-title">Top Colors <!-- <span>| Today</span> --></h5>
+                    <h5 class="card-title">Top Styles <!-- <span>| Today</span> --></h5>
 
                     <table class="table table-borderless datatable">
                       <thead>
@@ -460,7 +550,7 @@
       <!-- </div> -->
     </section>
 
-  </main><!-- End #main ( Orders ) -->
+  </main><!-- End #main ( Styles ) -->
 {% endblock content %}
 
 {% block extra_js %}

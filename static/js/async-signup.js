@@ -5,9 +5,9 @@ const usernameField = document.querySelector("#yourUsername");
 const feedBackArea = document.querySelector(".usernameFeedBackArea");
 const usernameSuccessOutput = document.querySelector(".usernameSuccessOutput");
 
-const phoneField = document.querySelector("#userphone");
-const phoneFeedBackArea = document.querySelector(".phoneFeedBackArea");
-const phoneSuccessOutput = document.querySelector(".phoneSuccessOutput");
+// const phoneField = document.querySelector("#userphone");
+// const phoneFeedBackArea = document.querySelector(".phoneFeedBackArea");
+// const phoneSuccessOutput = document.querySelector(".phoneSuccessOutput");
 
 const emailField = document.querySelector("#yourEmail");
 const emailFeedBackArea = document.querySelector(".emailFeedBackArea");
@@ -17,40 +17,40 @@ const submitBtn = document.querySelector("#user-auth-sumbit-btn");
 
 
 // Verify Phone Ajax Validation
-phoneField.addEventListener("input", (e) => {
-  const userphoneVal = e.target.value;
+// phoneField.addEventListener("input", (e) => {
+//   const userphoneVal = e.target.value;
 
-  phoneSuccessOutput.style.display = "block";
+//   phoneSuccessOutput.style.display = "block";
 
-  phoneSuccessOutput.innerHTML = '<i class="bi bi-arrow-repeat"></i>  '+`Checking  ${userphoneVal}`;
+//   phoneSuccessOutput.innerHTML = '<i class="bi bi-arrow-repeat"></i>  '+`Checking  ${userphoneVal}`;
 
-  phoneField.classList.remove("is-valid");
-  phoneField.classList.remove("is-invalid");
-  phoneFeedBackArea.style.display = "none";
+//   phoneField.classList.remove("is-valid");
+//   phoneField.classList.remove("is-invalid");
+//   phoneFeedBackArea.style.display = "none";
 
-  if (userphoneVal.length > 0) {
-    fetch("/Auth/validate-phonenumber/", {
-      body: JSON.stringify({ userphonenumber: userphoneVal }),
-      method: "POST",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        phoneSuccessOutput.style.display = "none";
-        console.log("data", data);
-        if (data.userphone_error) {
-          submitBtn.disabled = true;
-          phoneField.classList.add("is-invalid");
-          phoneFeedBackArea.style.display = "block";
-          phoneFeedBackArea.innerHTML = `<p class="text-danger">${data.userphone_error}</p>`;
-          // submitBtn.classList.add("btn--dark-lighter");
-        } else {
-          submitBtn.removeAttribute("disabled");
-          phoneField.classList.add("is-valid");
-          // submitBtn.classList.remove("btn--dark-lighter");
-        }
-      });
-  }
-});
+//   if (userphoneVal.length > 0) {
+//     fetch("/Auth/validate-phonenumber/", {
+//       body: JSON.stringify({ userphonenumber: userphoneVal }),
+//       method: "POST",
+//     })
+//       .then((res) => res.json())
+//       .then((data) => {
+//         phoneSuccessOutput.style.display = "none";
+//         console.log("data", data);
+//         if (data.userphone_error) {
+//           submitBtn.disabled = true;
+//           phoneField.classList.add("is-invalid");
+//           phoneFeedBackArea.style.display = "block";
+//           phoneFeedBackArea.innerHTML = `<p class="text-danger">${data.userphone_error}</p>`;
+//           // submitBtn.classList.add("btn--dark-lighter");
+//         } else {
+//           submitBtn.removeAttribute("disabled");
+//           phoneField.classList.add("is-valid");
+//           // submitBtn.classList.remove("btn--dark-lighter");
+//         }
+//       });
+//   }
+// });
 
 // Verify Username Ajax Validation
 usernameField.addEventListener("input", (e) => {

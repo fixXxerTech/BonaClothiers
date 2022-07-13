@@ -297,19 +297,35 @@
               <!-- Recent Sales -->
               <div class="col-12">
 
-              {% if form.errors %}
-                {% for key, value in form.errors.items %}
-                  <div class="alert alert-danger alert-dismissible fade show w-100" role="alert">
-                    <!-- <i class="bi bi-exclamation-octagon"></i> -->
-                    <h4 class="alert-heading">
-                    <i class="bi bi-exclamation-octagon"></i>  Error</h4>
-                    <p class="text-capitalize">{{ key }}:</span> {{ value|striptags }}</p>
-                    <!-- <hr> -->
-                    <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                {% endfor %}
-              {% endif %}
+                {% if form.errors %}
+                  {% for key, value in form.errors.items %}
+                    <div class="alert alert-danger alert-dismissible fade show w-100" role="alert">
+                      <!-- <i class="bi bi-exclamation-octagon"></i> -->
+                      <h4 class="alert-heading">
+                      <i class="bi bi-exclamation-octagon"></i>  Error</h4>
+                      <p class="text-capitalize">{{ key }}:</span> {{ value|striptags }}</p>
+                      <!-- <hr> -->
+                      <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+
+
+                {% if messages %}
+                  {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show w-100" role="alert">
+                      <!-- <i class="bi bi-exclamation-octagon"></i> -->
+                      <h4 class="alert-heading text-capitalize">
+                      <i class="bi bi-check2-circle"></i>  {{ message.tags }}</h4>
+                      <p class="text-capitalize"><span>{{ message }}</p>
+                      <!-- <p class="text-capitalize"><span>{{ key }}:</span> {{ value|striptags }}</p> -->
+                      <!-- <hr> -->
+                      <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>S
+                    </div>
+                  {% endfor %}
+                {% endif %}
               
                 <div class="card recent-sales overflow-auto">
 
@@ -330,19 +346,18 @@
                   </div>
 
                   <div class="card-body">
-                    <h5 class="card-title">Recent Colors <!-- <span>| Today</span> --></h5>
+                    <h5 class="card-title">Recent Styles <!-- <span>| Today</span> --></h5>
 
                     <!-- Floating Labels Form -->
                     <form method="post" action="." class="row g-3" enctype="multipart/form-data">
                       {% csrf_token %}
-            
 
                       <div class="modal-body row g-3">
 
                         <div class="col-md-6">
                           <div class="form-floating">
-                            <input type="text" class="form-control" id="ColorName" placeholder="Color name" name="color_name" value="{{ form.color_name.value }}">
-                            <label for="ColorName">Color Name</label>
+                            <input type="text" class="form-control" id="StyleName" placeholder="Style name" name="style_name" value="{{ form.style_name.value }}">
+                            <label for="StyleName">Style Name</label>
                           </div>
                         </div>
 
@@ -352,11 +367,11 @@
                             <img src="{{ form.color_image.value.url }}" width="60px" height="60px" id="StyleImagePreview"/>
                             <span class="font-weight-bold">
                               <br>
-                              Color Image
+                              Style Image
                             </span>
                           </label>
 
-                          <input type="file" id="StyleImage" alt="Color Image" name="color_image"accept="image/jpeg, image/png, image/gif, image/jpg, image/svg image/*" style="display: none;"/>
+                          <input type="file" id="StyleImage" alt="Style Image" name="style_image"accept="image/jpeg, image/png, image/gif, image/jpg, image/svg image/*" style="display: none;"/>
                         </div>
 
                       </div>
@@ -364,7 +379,7 @@
                       <div class="modal-footer justify-content-center">
                         <button type="submit" class="btn btn-outline-primary">
                           <i class="bi bi-pencil-square"></i>
-                          Update Color
+                          Update Styles
                         </button>
                         <a href="{% url 'AllColorsView' %}">
                           <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">

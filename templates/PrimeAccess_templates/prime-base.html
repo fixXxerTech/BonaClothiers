@@ -258,13 +258,15 @@
               <li>
                 <hr class="dropdown-divider">
               </li>-->
-
-              <li>
-                <a class="dropdown-item d-flex align-items-center" href="{% url 'LogoutView' %}">
-                  <i class="bi bi-box-arrow-right"></i>
-                  <span>Sign Out</span>
-                </a>
-              </li>
+              {% if request.user.is_authenticated %}
+                <li>
+                  <a class="dropdown-item d-flex align-items-center text-danger" href="{% url 'LogoutView' %}">
+                    <!-- <i class="bi bi-box-arrow-right"></i> -->
+                    <i class="bi bi-power"></i>
+                    <span>Sign Out</span>
+                  </a>
+                </li>
+              {% endif %}
 
             </ul><!-- End Profile Dropdown Items -->
           </li><!-- End Profile Nav -->
@@ -366,7 +368,7 @@
           </ul>
         </li><!-- End Components Nav -->
 
-        <li class="nav-item">
+        <!--<li class="nav-item">
           <a class="nav-link collapsed" href="{% url 'AllColorsView' %}">
             <i class="bi bi-palette"></i>
             <span>Fabric Colors</span>
@@ -374,30 +376,56 @@
         </li><!-- End Colors Nav -->
 
         <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#colors-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-palette"></i><span>Outfit Colors</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="colors-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="{% url 'AllColorsView' %}">
+                <i class="bi bi-circle"></i><span>All Colors</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a href="{% url 'AllProductsView' %}">
+                <i class="bi bi-circle"></i><span>Available Products</span>
+              </a>
+            </li>-->
+          </ul> 
+        </li><!-- End Colors Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#styles-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-brush"></i><span>Styles</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="styles-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="{% url 'AllStylesView' %}">
+                <i class="bi bi-circle"></i><span>All Styles</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a href="{% url 'AllProductsView' %}">
+                <i class="bi bi-circle"></i><span>Available Products</span>
+              </a>
+            </li>-->
+          </ul> 
+        </li><!-- End Style Nav -->
+
+        <li class="nav-item">
           <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
             <i class="bi bi-journal-text"></i><span>Orders</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
             <li>
-              <a href="{% url 'AllOrdersView' category='-' %}">
+              <a href="{% url 'AllOrdersView' %}">
                 <i class="bi bi-circle"></i><span>All Orders</span>
               </a>
             </li>
             <!-- <li>
-              <a href="{% url 'AllOrdersView' category='pending' %}">
+              <a href="{% url 'AllOrdersView' %}">
                 <i class="bi bi-circle"></i><span>Pending Orders</span>
               </a>
-            </li>
-            <li>
-              <a href="{% url 'AllOrdersView' category='approved' %}">
-                <i class="bi bi-circle"></i><span>Approved Orders</span>
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'AllOrdersView' category='rejected' %}">
-                <i class="bi bi-circle"></i><span>Rejected Orders</span>
-              </a>
-            </li> -->
+            </li>-->
           </ul>
         </li><!-- End Orders Nav -->
 
@@ -407,26 +435,15 @@
           </a>
           <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
             <li>
-              <a href="{% url 'AllProductsView' category='-' %}">
+              <a href="{% url 'AllProductsView' %}">
                 <i class="bi bi-circle"></i><span>All Outfits</span>
               </a>
             </li>
             <!-- <li>
-              <a href="{% url 'AllProductsView' category='available' %}">
+              <a href="{% url 'AllProductsView' %}">
                 <i class="bi bi-circle"></i><span>Available Products</span>
               </a>
-            </li>
-            <li>
-              <a href="{% url 'AllProductsView' category='soldout' %}">
-                <i class="bi bi-circle"></i><span>Sold Out Products</span>
-              </a>
             </li>-->
-            <hr>
-            <li>
-              <a href="{% url 'AddProductsView' %}">
-                <i class="bi bi-circle"></i><span>Add New Products</span>
-              </a>
-            </li>
           </ul> 
         </li><!-- End Product Nav -->
 

@@ -6,11 +6,12 @@ from . import forms
 from . import models
 from pprint import pprint
 from .helpers import EmailManager
+from django.contrib import messages
 from django.http import JsonResponse
 from os.path import join as join_path
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
-from django.contrib.messages import constants as messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.utils import timezone
 from django.shortcuts import render
@@ -238,30 +239,31 @@ class RegisterView(custom_view):
 
     def get(self, request):
         form = forms.RegisterationForm()
-        profile_form = forms.UserProfileForm()
+        # profile_form = forms.UserProfileForm()
 
         context = {
             "form": form,
             "today": Todays_Date,
             "panel_name": panel_name,
-            "profile_form": profile_form,
+            # "profile_form": profile_form,
         }
 
         return render(request, self.template_name, context=context)
 
     def post(self, request):
         form = forms.RegisterationForm(request.POST)
-        profile_form = forms.UserProfileForm(request.POST)
+        # profile_form = forms.UserProfileForm(request.POST)
 
         context = {
             "form": form,
             "today": Todays_Date,
             "panel_name": panel_name,
-            "profile_form": profile_form,
+            # "profile_form": profile_form,
         }
 
         try:
-            if form.is_valid() and profile_form.is_valid():
+            # if form.is_valid() and profile_form.is_valid():
+            if form.is_valid():
                 new_manager = form.save(commit=False)
                 # Old habits die hard. In newer django, you do not need to declear this
                 #-----------------------------
@@ -270,15 +272,17 @@ class RegisterView(custom_view):
                 #-----------------------------
                 new_manager.save()
 
-                new_manager_profile = profile_form.save(commit=False)
-                new_manager_profile.user = new_manager
-                new_manager_profile.save()
+                # new_manager_profile = profile_form.save(commit=False)
+                # new_manager_profile.user = new_manager
+                # new_manager_profile.save()
 
                 # You can add some logic here to send email to the surveyor(s)
 
                 # if EmailManager(request) == "email-sent":
-                    # return render(request, self.email_sent_template, context=context)
-                return redirect(reverse("LoginView", args={"signup-success"}))
+                # return render(request, self.email_sent_template, context=context)
+                messages.success(request, "Registeration Successful!!")
+                return redirect(reverse("LoginView"))
+                # return redirect(reverse("LoginView", args={"signup-success"}))
         except Exception as Error:
             raise Error
 
@@ -288,7 +292,7 @@ class RegisterView(custom_view):
 class LoginView(custom_view):
     template_name = join_path("Auth_templates", "login.html")
 
-    def get(self, request, message):
+    def get(self, request):
         form_class = forms.LoginForm()
 
         context = {
@@ -297,15 +301,9 @@ class LoginView(custom_view):
             "panel_name": panel_name,
         }
 
-        if message == "signup-success":
-            context["success_message"] = "Registeration Successful!!"
-            # context["login_error"] = "Login was unsuccessful, Please try again."
-        elif message == "update-success":
-            context["success_message"] = "Account Update Successful!!"
-
         return render(request, self.template_name, context)
 
-    def post(self, request, message):
+    def post(self, request):
         form_class = forms.LoginForm(request.POST)
 
         context = {
@@ -334,11 +332,13 @@ class LoginView(custom_view):
 
             if user is None:
                 context = {
-                    "login_error": "Login was unsuccessful, Please try again.",
+                    # "login_error": "Login was unsuccessful, Please try again.",
                     "form": form_class,
                     "today": Todays_Date,
                 }
                 print("User is not logged in")
+                message.error(
+                    request, "Login was unsuccessful, Please try again.")
                 return render(request, self.template_name, context)
             else:
                 login(request, user)
@@ -356,14 +356,20 @@ class LoginView(custom_view):
 
         return render(request, self.template_name, context)
 
+# Do a logout page
 
-class LogoutView(auth_views.LogoutView):
+
+class LogoutView(LoginRequiredMixin, auth_views.LogoutView):
 
     args = {
         "today": Todays_Date,
         "panel_name": panel_name,
-        "logout_message": "You are now logged out !!"
     }
-
-    template_name = join_path("Auth_templates", 'logout.html')
     extra_conext = args
+    next_page = reverse_lazy('LoginView')
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        messages.add_message(request, messages.SUCCESS,
+                             "You are now logged out !!")
+        return response

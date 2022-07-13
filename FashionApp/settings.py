@@ -34,11 +34,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.staticfiles',
+    'django.contrib.contenttypes',
     'Auth_app',
     'Customer_app',
     'PrimeAccess_app',
@@ -165,9 +165,10 @@ ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 
 # Django default authentucation paths override settings
 
-LOGIN_URL = '/Auth/login/-/'
-LOGOUT_URL = '/Auth/register/'
+LOGIN_URL = '/Auth/login/'
+# LOGOUT_URL = '/Auth/logout/'
 # LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/Auth/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Email backend and Credential settings

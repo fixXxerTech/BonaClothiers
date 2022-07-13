@@ -18,7 +18,7 @@ Authenticated_manager = get_user_model()
 # ----------------------------------------
 NIGERIAN_STATES = (
 
-    # ("", "state"),
+    ("", "----------"),
     ("Abuja FCT", "Abuja FCT"),
     ("Abia", "Abia"),
     ("Adamawa", "Adamawa"),
@@ -59,18 +59,31 @@ NIGERIAN_STATES = (
     ("Outside Nigeria", "Outside Nigeria"),
 )
 
-
 # A drop down list of all Outfit Measure Type States
 # ---------------------------------------------------
 OUTFIT_MEASUREMENT_TYPES = (
 
-    # ("", "state"),
+    ("", "----------"),
     ("Long Sleeve", "Long Sleeve"),
     ("3/4 Sleeve", "3/4 Sleeve"),
     ("Short Sleev", "Short Sleeve"),
     ("Trouser", "Trouser"),
     ("Short", "Short"),
+    ("Agbada Sleeve", "Agbada Sleeve"),
 )
+
+# A drop down list of all Outfit Names 
+# -------------------------------------
+OUTFIT_NAMES = (
+
+    ("", "----------"),
+    ("Senator", "Senator"),
+    ("Ankara", "Ankara"),
+    ("Beach wear", "Beach wear"),
+    ("Ishiagu", "Ishiagu"),
+    ("Agbada", "Agbada"),
+)
+
 # <select name="state" id="state">
 #               <option value="" selected="selected">- Select -</option>
 #               <option value="Abuja FCT">Abuja FCT</option>
@@ -113,33 +126,24 @@ OUTFIT_MEASUREMENT_TYPES = (
 #      <option value="Outside Nigeria">Outside Nigeria</option>
 #             </select>
 
-def InventoryPhotoRename(instance, filename):
-    ext = filename.split('.')[-1]
-    if instance.pk:
-        return '{folder}/{date}/{name}.{extension}'.format(folder='Outfits', date=timezone.now(), name=instance.pk, extension=ext)
-    else:
-        pass
-        # do something if pk is not there yet
-
-
 class InventoryForm(forms.ModelForm):
 
-    style_image = forms.ImageField(
-        label='Style Image',
-        # widget=forms.TextInput(
-        #     attrs={
+    outfit_name = forms.ChoiceField(
+        label='Outfit Name',
+        choices=OUTFIT_NAMES,
+        widget=forms.Select(
+            attrs={
 
-        #         'type': 'text',
-        #         'id': 'username',
-        #         'name': 'username',
-        #         'placeholder': '',
-        #         'class': 'input--dark input--squared',
-        #     }
-        # )
+                'name': 'outfit_name',
+                'aria-label': 'outfit_name',
+                'id': 'OutfitName',
+                'class': 'form-select',
+
+            }
+        )
     )
-
     outfit_measurement_type = forms.ChoiceField(
-        label='Outfit Type',
+        label='Measurement Type',
         choices=OUTFIT_MEASUREMENT_TYPES,
         widget=forms.Select(
             attrs={
@@ -148,8 +152,6 @@ class InventoryForm(forms.ModelForm):
                 'aria-label': 'outfit_measurement_type',
                 'id': 'OutfitMeasurementType',
                 'class': 'form-select',
-                # 'data-dropdown-css-class': 'woox--select-squared-dropdown-dark',
-                # 'data-minimum-results-for-search': 'Infinity',
 
             }
         )
@@ -213,7 +215,6 @@ class InventoryForm(forms.ModelForm):
         model = models.InventoryModel
         fields = (
             'outfit_name',
-            'style_image',
             'outfit_price',
             'outfit_measurement_type',
         )
@@ -227,10 +228,8 @@ class InventoryForm(forms.ModelForm):
     def save(self, commit=True):
         InventoryModelInstance = super(InventoryForm, self).save(commit=False)
         InventoryModelInstance.outfit_name = self.cleaned_data['outfit_name']
-        InventoryModelInstance.style_image = self.cleaned_data['style_image']
         InventoryModelInstance.outfit_price = self.cleaned_data['outfit_price']
         InventoryModelInstance.outfit_measurement_type = self.cleaned_data['outfit_measurement_type']
-        # InventoryModelInstance.active_manager = self.cleaned_data['active_manager']
 
         if commit:
             InventoryModelInstance.save()
@@ -249,8 +248,6 @@ class DeliverySettngsForm(forms.ModelForm):
                 'aria-label': 'State',
                 'id': 'floatingSelect',
                 'class': 'form-select',
-                # 'data-dropdown-css-class': 'woox--select-squared-dropdown-dark',
-                # 'data-minimum-results-for-search': 'Infinity',
 
             }
         )
@@ -328,6 +325,26 @@ class ColorForm(forms.ModelForm):
             'deliver_date',
             'date_ordered',
             'active_manager',
+        )
+
+
+class TransporterForm(forms.ModelForm):
+    class Meta:
+        model = models.TransporterModel
+        exclude = (
+            'record_date',
+            'active_manager',
+            'record_date_edited',
+        )
+
+
+class StylesForm(forms.ModelForm):
+    class Meta:
+        model = models.StyleImageModel
+        exclude = (
+            'record_date',
+            # 'active_manager',
+            'record_date_edited',
         )
 
 

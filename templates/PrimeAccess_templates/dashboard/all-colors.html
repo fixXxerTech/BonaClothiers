@@ -12,11 +12,11 @@
    <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Colors</h1>
+      <h1>Outfit Colors</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'PrimeAccessView' %}">Home</a></li>
-          <li class="breadcrumb-item active">Fabric Colors</li>
+          <li class="breadcrumb-item active">Outfit Colors</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -297,19 +297,34 @@
               <!-- Recent Sales -->
               <div class="col-12">
 
-              {% if form.errors %}
-                {% for key, value in form.errors.items %}
-                  <div class="alert alert-danger alert-dismissible fade show w-100" role="alert">
-                    <!-- <i class="bi bi-exclamation-octagon"></i> -->
-                    <h4 class="alert-heading">
-                    <i class="bi bi-exclamation-octagon"></i>  Error</h4>
-                    <p class="text-capitalize">{{ key }}:</span> {{ value|striptags }}</p>
-                    <!-- <hr> -->
-                    <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                {% endfor %}
-              {% endif %}
+                {% if form.errors %}
+                  {% for key, value in form.errors.items %}
+                    <div class="alert alert-danger alert-dismissible fade show w-100" role="alert">
+                      <!-- <i class="bi bi-exclamation-octagon"></i> -->
+                      <h4 class="alert-heading">
+                      <i class="bi bi-exclamation-octagon"></i>  Error</h4>
+                      <p class="text-capitalize">{{ key }}:</span> {{ value|striptags }}</p>
+                      <!-- <hr> -->
+                      <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+
+                {% if messages %}
+                  {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show w-100" role="alert">
+                      <!-- <i class="bi bi-exclamation-octagon"></i> -->
+                      <h4 class="alert-heading text-capitalize">
+                      <i class="bi bi-check2-circle"></i>  {{ message.tags }}</h4>
+                      <p class="text-capitalize"><span>{{ message }}</p>
+                      <!-- <p class="text-capitalize"><span>{{ key }}:</span> {{ value|striptags }}</p> -->
+                      <!-- <hr> -->
+                      <!-- p class="mb-0">Temporibus quis et qui aspernatur laboriosam sit eveniet qui sunt.</p> -->
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endfor %}
+                {% endif %}
 
                 <div class="card recent-sales overflow-auto">
 
@@ -342,7 +357,7 @@
                           </div>
 
                             <!-- Floating Labels Form -->
-                          <form method="post" action="." class="row g-3" enctype="multipart/form-data">
+                          <form method="post" action="." class="row g-3 justify-content-center" enctype="multipart/form-data">
                             {% csrf_token %}
                   
 
@@ -404,8 +419,6 @@
                           <th scope="col">#</th>
                           <th scope="col">Color Image</th>
                           <th scope="col">Color Name</th>
-                          <th scope="col">Date Added</th>
-                          <th scope="col">Last Edited</th>
                           <th scope="col">Edit</th>
                           <th scope="col">Delete</th>
                         </tr>
@@ -420,9 +433,6 @@
                               </a>
                             </th>
                             <td>{{ color.color_name }}</td>
-                            <td>{{ color.record_date|naturalday }}</td>
-                            <td>{{ color.record_date_edited|naturalday }}</td>
-                            <!-- <td><span class="badge bg-success">Approved</span></td> -->
                             <td>
                               <a class="btn btn-outline-primary w-100"href="{% url 'ModifyColorsView' action='update' instance=color.pk %}">
                                 <i class="bi bi-pencil-square"></i>

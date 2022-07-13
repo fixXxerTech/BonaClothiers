@@ -15,7 +15,7 @@ urlpatterns = [
     path('validate-login/',
          csrf_exempt(views.LoginEmailValidationView.as_view()),
          name="validate-login"),
-    path('login/<message>/',
+    path('login/',
          views.LoginView.as_view(),
          name="LoginView"),
     path('register/',

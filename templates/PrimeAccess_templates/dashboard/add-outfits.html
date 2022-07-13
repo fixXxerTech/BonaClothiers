@@ -45,64 +45,50 @@
                   </ul>
                 </div>
 
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Floating labels Form</h5>
+                <div class="card-body">
+                  <h5 class="card-title">Add New Outfit</h5>
 
-                    <!-- Floating Labels Form -->
-                    <form method="post" action="." class="row g-3" enctype="multipart/form-data">
-                      {% csrf_token %}
-                      
-                      <div class="col-md-12">
-                        <div class="form-floating">
-                          <input type="text" class="form-control" id="OutfitName" placeholder="Outfit Name" name="outfit_name">
-                          <label for="OutfitName">Outfit Name</label>
-                        </div>
+                  <!-- Floating Labels Form -->
+                  <form method="post" action="." class="row g-3" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="col-md-12">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="OutfitName" placeholder="Outfit Name" name="outfit_name">
+                        <label for="OutfitName">Outfit Name</label>
                       </div>
-                      <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                          {{ form.outfit_measurement_type }}
-                          <!-- <select class="form-select" id="OutfitType" aria-label="OutfitType">
-                            <option selected>New York</option>
-                            <option value="1">Oregon</option>
-                            <option value="2">DC</option>
-                          </select> -->
-                          <label for="OutfitType">{{ form.outfit_measurement_type.label }}</label>
-                        </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating mb-3">
+                        {{ form.outfit_measurement_type }}
+                        <!-- <select class="form-select" id="OutfitType" aria-label="OutfitType">
+                          <option selected>New York</option>
+                          <option value="1">Oregon</option>
+                          <option value="2">DC</option>
+                        </select> -->
+                        <label for="OutfitType">{{ form.outfit_measurement_type.label }}</label>
                       </div>
+                    </div>
 
-                      <div class="col-md-6">
-                        <div class="form-floating">
-                          <input type="text" class="form-control" id="OutfitPrice"  placeholder="Outfit Price" name="outfit_price">
-                          <label for="OutfitPrice">Outfit Price</label>
-                        </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="OutfitPrice"  placeholder="Outfit Price" name="outfit_price">
+                        <label for="OutfitPrice">Outfit Price</label>
                       </div>
+                    </div>
 
-                      <div class="col-md-6">
-                        <label for="StyleImage" class="text-center">
-                          <img src="https://icons.iconarchive.com/icons/dtafalonso/android-lollipop/128/Downloads-icon.png" width="60px" height="60px" id="StyleImagePreview"/>
-                          <span class="font-weight-bold">
-                            <br>
-                            Add Style Image
-                          </span>
-                        </label>
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-outline-success">
+                        <i class="bi bi-folder-plus"></i>
+                        Add Outfit
+                      </button>
+                      <button type="reset" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Reset
+                      </button>
+                    </div>
+                  </form><!-- End floating Labels Form -->
 
-                        <input type="file" id="StyleImage" alt="Style Image" name="style_image"accept="image/jpeg, image/png, image/gif, image/jpg, image/svg image/*" style="display: none;" />
-                      </div>
-
-                      <div class="text-center">
-                        <button type="submit" class="btn btn-outline-success">
-                          <i class="bi bi-folder-plus"></i>
-                          Add Outfit
-                        </button>
-                        <button type="reset" class="btn btn-outline-secondary">
-                          <i class="bi bi-arrow-clockwise"></i>
-                          Reset
-                        </button>
-                      </div>
-                    </form><!-- End floating Labels Form -->
-
-                  </div>
                 </div>
 
               </div>
